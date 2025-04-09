@@ -1,3 +1,4 @@
+
 FROM alpine:3.19.1
 
 LABEL AboutImage "Alpine_Chromium_NoVNC"
@@ -24,6 +25,13 @@ ENV	VNC_PASS="CHANGE_IT" \
 	LANGUAGE=en_US.UTF-8 \
 	LC_ALL=C.UTF-8 \
 	TZ="Asia/Kolkata"
+#program:VNC
+command=bash -c 'sed -i "s/\$DESKTOP/$VNC_TITLE/g" /opt/novnc/index.html && if [ "$VNC_SHARED" = "false" ]; then x11vnc -storepasswd $VNC_PASS /config/.xpass && x11vnc -usepw -rfbport 5900 -rfbauth /config/.xpass -geometry $VNC_RESOLUTION -forever -alwaysshared -permitfiletransfer -noxrecord -noxfixes -noxdamage -dpms -bg -desktop $VNC_TITLE; else x11vnc -storepasswd $VNC_PASS /config/.xpass && x11vnc -usepw -rfbport 5900 -rfbauth /config/.xpass -geometry $VNC_RESOLUTION -forever -shared -alwaysshared -permitfiletransfer -bg -desktop $VNC_TITLE; fi' /
+startsecs=0 /
+autorestart=unexpected /
+stderr_logfile=/var/log/x11vnc.stderr.log /
+priority=3 /
+
 
 COPY assets/ /
 
